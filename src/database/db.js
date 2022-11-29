@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 mongoose.Promise = global.Promise;
 const DB_USER = process.env.DB_USER;
 const DB_PASSWORD = process.env.DB_PASSWORD;
+const DB_ACESS = process.env.DB_ACESS
 
 const connectDb = () => {
  
