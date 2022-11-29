@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 mongoose.Promise = global.Promise;
 const DB_USER = process.env.DB_USER;
@@ -10,7 +10,7 @@ const connectDb = () => {
 
   mongoose
     .connect(
-      `mongodb+srv://${DB_USER}:${DB_PASSWORD}@orionapp.mk9sbmy.mongodb.net/?retryWrites=true&w=majority`,
+      `mongodb+srv://admin:gvGfkUcv9WLWYma2@orionapp.mk9sbmy.mongodb.net/?retryWrites=true&w=majority`,
       { useNewUrlParser: true, useUnifiedTopology: true }
     ).then(() => {
       console.log("Conectado ao MongoDB com sucesso!");
@@ -19,4 +19,4 @@ const connectDb = () => {
     );
 };
 
-module.exports = connectDb;
+export default connectDb;

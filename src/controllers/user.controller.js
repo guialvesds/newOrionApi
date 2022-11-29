@@ -1,5 +1,5 @@
-const userService = require("../services/user.service");
-const mongoose = require("mongoose");
+import  userService  from "../services/user.service.js";
+// const mongoose = require("mongoose");
 
 const create = async (req, res) => {
   try {
@@ -39,34 +39,46 @@ const findAll = async (req, res) => {
 
 const findOne = async (req, res) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      res.status(400).send({ message: "ID Inválido" });
-    }
-
-    const user = await userService.findOneService(req.params.id);
-
-    if (!user) {
-      res.status(400).send({ message: "Não a usuários registrados" });
-    }
-
+    const user = req.user;
     res.status(200).send({ user });
   } catch (error) {
     console.error("Algo deu errado: ", error);
   }
 };
 
+const editOne = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    if (!name && !email && !password) {
+      res.status(400).send({ message: "Pelo menos um campo é obrigatório!" });
+    }
+
+    const { id, user } = req;
+
+    await userService.editOneService(id, name, email, password);
+
+    res.send({ message: "Usuário alterado com sucesso." });
+  } catch (error) {
+    return res
+      .status(500)
+      .send({ message: "Não foi possível atualizar o usuário." });
+  }
+};
+
 const deleteUser = async (req, res) => {
   try {
-     await userService.deleteService(req.params.id);
+    await userService.deleteService(req.params.id);
     res.status(200).send({ message: "Ususário excluído com sucesso" });
   } catch (error) {
     res.status(500).send({ message: "Não foi possível deletar o usuário." });
   }
 };
 
-module.exports = {
+export default {
   create,
   findAll,
   findOne,
   deleteUser,
+  editOne,
 };

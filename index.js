@@ -1,12 +1,13 @@
-const express = require("express");
-const cors = require("cors");
+import express from "express";
+import cors from "cors";
+import * as dotenv from "dotenv";
 
 const app = express();
 
-require("dotenv").config();
 
-const userRoute = require("./src/routes/user.route");
-const connectDb = require("./src/database/db");
+
+import userRoute from "./src/routes/user.route.js";
+import connectDb from "./src/database/db.js";
 
 const corsOptions = {
   origin: "*",
@@ -16,6 +17,7 @@ const corsOptions = {
 connectDb();
 app.use(cors(corsOptions));
 app.use(express.json());
+
 
 app.use("/user", userRoute);
 
