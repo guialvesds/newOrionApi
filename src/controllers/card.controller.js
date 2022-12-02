@@ -7,7 +7,13 @@ import {
   deleteCardService,
   addCommentService,
   deleteCommentService,
+  addMemberService,
+  deleteMemberService,
+  addTaskService,
+  addSubTaskService
 } from "../services/card.service.js";
+
+import userService from "../services/user.service.js";
 
 export const create = async (req, res) => {
   try {
@@ -140,18 +146,14 @@ export const addComment = async (req, res) => {
     const { comment } = req.body;
 
     if (!comment) {
-    return  res
-        .status(400)
-        .send({
-          message: "Para comentar é necessário enviar um comentário...",
-        });
-    }
+    return  res.status(400).send({message: "Para comentar é necessário enviar um comentário...",});
+  }
 
     await addCommentService(id, comment, userId);
 
     return res.send({ message: "Comentário adicionado com sucesso!" });
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).send({message: error.message});
   }
 };
 
@@ -185,3 +187,78 @@ export const deleteComment = async (req, res) => {
     return res.status(500).send(error.message);
   }
 };
+
+export const addMember = async (req, res) => {
+      try {
+  
+        const { id } = req.params;
+        const userId = req.userId;
+        const { member } = req.body;
+        const { memberEmail } = req.body;
+
+        if(!member){
+          return res.status(400).send({message: "É necessário enviar pelo menos um membro."});
+        }
+
+        await addMemberService(id, member, memberEmail, userId);
+
+        return res.send({message: "Membro adicionado com sucesso!"});
+        
+      } catch (error) {
+        return res.status(500).send({message: error.message});
+      }
+}
+
+export const deleteMember = async (req, res) => {
+  try {
+  
+    const { idCard, idMember } = req.params;
+
+    await deleteMemberService(idCard, idMember);
+
+    return res.send({message: "Membro removido com sucesso!"});
+    
+  } catch (error) {
+    return res.status(500).send({message: error.message});
+  }
+}
+
+export const addTask = async (req, res) => {
+    try {
+
+      const { id } = req.params;
+      const userId = req.userId;
+      const { title } = req.body;   
+
+      if(!title){
+        return res.status(400).send({message: "É necessário inserir um titulo."});
+      }
+
+      await addTaskService(id, title, userId);
+
+      res.send({message: "Task Adiciona com sucesso!"});
+      
+    } catch (error) {
+      res.status(500).send({message: error.message});
+    }
+};
+
+export const addSubTask = async (req, res) => {
+  try {
+
+    const { id, idTask } = req.params;
+    const userId = req.userId;
+    const { tarefa } = req.body;   
+
+    if(!tarefa){
+      return res.status(400).send({message: "É necessário inserir um titulo."});
+    }
+
+    await addSubTaskService(id, idTask, tarefa, userId);
+
+    res.send({message: "Task Adiciona com sucesso!"});
+    
+  } catch (error) {
+    res.status(500).send({message: error.message});
+  }
+}

@@ -21,19 +21,27 @@ const CardSchema = mongoose.Schema({
   },
   delivery_date: {
     type: Date,
-  }, 
-  user:{
+  },
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
   tasks: {
     type: Array,
-    require: false
+    require: false,
   },
-  comments:{
+  comments: {
     type: Array,
-    require: false
+    require: false,
+  },
+  members: {
+    type: Array,
+    require: false,
+      subTask: {
+         type: Array,
+         require: false,
+    },
   },
 });
 

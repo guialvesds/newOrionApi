@@ -8,13 +8,13 @@ export const validID = (req, res, next) => {
     res.status(400).send({ message: "ID Inválido" });
   }
 
-  next();
+  return next();
 };
 
 export const validUser = async (req, res, next) => {
   const id = req.params.id;
 
-  const user = await userService.findOneService(id);
+  const user = await userService.findOneUserService(id);
 
   if (!user) {
     return res.status(400).send({ message: "Usuário não encontrado!" });
@@ -24,7 +24,7 @@ export const validUser = async (req, res, next) => {
   req.user = user;
  
 
-  next();
+  return next();
 };
 
  

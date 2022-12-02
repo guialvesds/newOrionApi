@@ -1,29 +1,29 @@
 import User from "../models/User.js";
 
-const createService = (body) => {
+ const createUserService = (body) => {
   return User.create(body);
 };
 
-const findAllService = () => {
+ const findUserAllService = () => {
   return User.find();
 };
 
-const findOneService = (id) => {
+ const findOneUserService = (id) => {
   return User.findById(id);
 };
 
-const editOneService = (id, name, email, password) => {
+ const editOneUserService = (id, name, email, password) => {
   return User.findByIdAndUpdate({ _id: id }, { name, email, password });
 };
 
-const deleteService = (id) => {
+const deleteUserService = (id) => {
   return User.findByIdAndDelete(id);
 };
 
 export default {
-  createService,
-  findAllService,
-  findOneService,
-  deleteService,
-  editOneService,
+  createUserService,
+  findUserAllService,
+  findOneUserService,
+  deleteUserService,
+  editOneUserService,
 };

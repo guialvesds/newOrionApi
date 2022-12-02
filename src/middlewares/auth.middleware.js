@@ -30,7 +30,7 @@ export const authMiddleware = (req, res, next) => {
       if (error) {
         return res.status(401).send({ message: "Token inválido!" });
       }
-      const user = await userService.findOneService(decoded.id);
+      const user = await userService.findOneUserService(decoded.id);
 
       if (!user || !user.id) {
         return res.status(401).send({ message: "Usuário sem autentiação." });
