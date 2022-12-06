@@ -11,24 +11,24 @@ export const authMiddleware = (req, res, next) => {
     console.log(authorization);
 
     if (!authorization) {
-      return res.send(401);
+      return res.status(401).json({message: "Token inválido. au"});
     }
 
     const parts = authorization.split(" ");
 
     if (parts.length !== 2) {
-      return res.send(401);
+      return res.status(401).json({message: "Token inválido. pa"});
     }
 
     const [schema, token] = parts;
 
     if (schema !== "Bearer") {
-      return res.send(401);
+      return res.status(401).json({message: "Token inválido. sc"});
     }
 
     jwt.verify(token, process.env.SECRET, async (error, decoded) => {
       if (error) {
-        return res.status(401).send({ message: "Token inválido!" });
+        return res.status(401).send({ message: "Token inválido! er" });
       }
       const user = await userService.findOneUserService(decoded.id);
 
@@ -36,8 +36,9 @@ export const authMiddleware = (req, res, next) => {
         return res.status(401).send({ message: "Usuário sem autentiação." });
       }
 
-      req.userId = user.id;
-      
+      req.userId = user.id; 
+      req.userName = user; 
+           
       return next();
     });
   } catch (error) {

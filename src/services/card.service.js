@@ -8,12 +8,12 @@ export const findAllService = () => {
   return Card.find().sort({ _id: -1 }).populate("user");
 };
 
-export const finCardIdService = (id) => {
-  return Card.findById(id).populate("user");
+export const finCardIdService = (_id) => {
+  return Card.findById(_id).populate("user");
 };
 
-export const byUserService = (id) => {
-  return Card.find({ user: id }).sort({ _id: -1 }).populate("user");
+export const byUserService = (_id) => {
+  return Card.find({ user: _id }).sort({ _id: -1 }).populate("user");
 };
 
 export const updateCardService = (
@@ -39,7 +39,7 @@ export const deleteCardService = (id) => {
   return Card.findOneAndDelete({ _id: id });
 };
 
-export const addCommentService = (idCard, comment, userId) => {
+export const addCommentService = (idCard, comment, userId, userName) => {
   const idComment = Math.floor(Date.now() * Math.random()).toString(25);
 
   return Card.findOneAndUpdate(
@@ -49,18 +49,26 @@ export const addCommentService = (idCard, comment, userId) => {
         comments: {
           idComment,
           userId,
+          userName,
           comment,
           created_At: new Date(),
         },
       },
     }
-  );
+  ).populate("user");
 };
 
 export const deleteCommentService = (idCard, idComment, userId) => {
   return Card.findOneAndUpdate(
     { _id: idCard },
     { $pull: { comments: { idComment, userId } } }
+  );
+};
+
+export const editCommentService = (idCard, idComment, userId,  comment,) => {
+  return Card.findOneAndUpdate(
+    { _id: idCard },
+    { $set: {comments: { idComment, userId, comment, }}}
   );
 };
 
@@ -108,23 +116,29 @@ export const addTaskService = (idCard, title, userId) => {
   );
 };
 
+export const findSubTaskService = (idCard, idTask) => {
+  return Card.findOne(
+    {_id: idCard, idTask: idTask}
+    
+  );
+}
+
 export const addSubTaskService = (idCard, idTask, userId, tarefa) => {
   const idSubTask = Math.floor(Date.now() * Math.random()).toString(25);
 
   return Card.findOneAndUpdate(
-    { _id: idCard },    
+    { _id: idCard, idTask: idTask },    
     {
-      $push: {
-        tasks: {
-          idTask,
+      $push: {  
+        tasks: {      
           subTask: {
             idSubTask,
             tarefa,
             userId,
-            created_At: new Date(),
-          },
+            created_At: new Date(),          
         },
       },
+    },
     }
   );
 };

@@ -10,15 +10,14 @@ import {
   addMemberService,
   deleteMemberService,
   addTaskService,
-  addSubTaskService
+  addSubTaskService,
+  findSubTaskService,
+  editCommentService,
 } from "../services/card.service.js";
-
-import userService from "../services/user.service.js";
 
 export const create = async (req, res) => {
   try {
     const {
-      code,
       title,
       tag,
       created_at,
@@ -26,14 +25,18 @@ export const create = async (req, res) => {
       description,
       tasks,
       comments,
+      members,
     } = req.body;
 
     if (!title) {
       return res.status(400).send({ message: "Titulo é obrigatório." });
     }
+    const codRandon = 9999;
+
+    const codeCard = Math.floor(Math.random() * codRandon);
 
     await createService({
-      code,
+      code: codeCard,
       title,
       tag,
       created_at,
@@ -42,6 +45,7 @@ export const create = async (req, res) => {
       description,
       tasks,
       comments,
+      members,
     });
 
     return res.send(201);
@@ -60,7 +64,7 @@ export const findAll = async (req, res) => {
 
     return res.send({
       data: card.map((item) => ({
-        id: item._id,
+        _id: item._id,
         code: item.code,
         title: item.title,
         tag: item.tag,
@@ -106,7 +110,7 @@ export const byUser = async (req, res) => {
 
 export const updateCard = async (req, res) => {
   try {
-    const { title, tag, delivery_date, description, tasks, comments } =
+    const { title, tag, delivery_date, description, tasks, comments, members } =
       req.body;
 
     const { id } = req.params;
@@ -118,7 +122,8 @@ export const updateCard = async (req, res) => {
       delivery_date,
       description,
       tasks,
-      comments
+      comments,
+      members
     );
 
     return res.send({ message: "Card alterado com sucesso!" });
@@ -144,16 +149,23 @@ export const addComment = async (req, res) => {
     const { id } = req.params;
     const userId = req.userId;
     const { comment } = req.body;
+    const userName = req.userName.name;
+
+    console.log(userName);
 
     if (!comment) {
-    return  res.status(400).send({message: "Para comentar é necessário enviar um comentário...",});
-  }
+      return res
+        .status(400)
+        .send({
+          message: "Para comentar é necessário enviar um comentário...",
+        });
+    }
 
-    await addCommentService(id, comment, userId);
+    await addCommentService(id, comment, userId, userName);
 
     return res.send({ message: "Comentário adicionado com sucesso!" });
   } catch (error) {
-    return res.status(500).send({message: error.message});
+    return res.status(500).send({ message: error.message });
   }
 };
 
@@ -161,19 +173,23 @@ export const deleteComment = async (req, res) => {
   try {
     const { idCard, idComment } = req.params;
     const userId = req.userId;
+    const userName = req.userName;
 
     const commenteDeleted = await deleteCommentService(
       idCard,
       idComment,
-      userId
+      userId,
+      userName
     );
 
     console.log(commenteDeleted);
 
-    const commentFinder = commenteDeleted.comments.find((comment) => comment.idComment === idComment);
+    const commentFinder = commenteDeleted.comments.find(
+      (comment) => comment.idComment === idComment
+    );
 
-    if(!commentFinder){
-      return res.status(400).send({message: "Comentário não encontrado."});
+    if (!commentFinder) {
+      return res.status(400).send({ message: "Comentário não encontrado." });
     }
 
     if (commentFinder.userId !== userId) {
@@ -188,77 +204,120 @@ export const deleteComment = async (req, res) => {
   }
 };
 
+export const editComment = async (req, res) => {
+  try {
+    const { idCard, idComment } = req.params;
+    const userId = req.userId;
+    const {comment} = req.body;
+
+    const commenteEdit = await editCommentService(
+      idCard,
+      idComment,
+      userId,
+      comment
+    );
+
+    const commentFinder = commenteEdit.comments.find(
+      (comment) => comment.idComment === idComment
+    );
+
+    if (!commentFinder) {
+      return res.status(400).send({ message: "Comentário não encontrado." });
+    }
+
+    if (commentFinder.userId !== userId) {
+      return res
+        .status(400)
+        .send({ message: "Você não pode editar esse comentário." });
+    }
+
+    return res.send({ message: "Comentário editado com sucesso!" });
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+};
+
 export const addMember = async (req, res) => {
-      try {
-  
-        const { id } = req.params;
-        const userId = req.userId;
-        const { member } = req.body;
-        const { memberEmail } = req.body;
+  try {
+    const { id } = req.params;
+    const userId = req.userId;
+    const { member } = req.body;
+    const { memberEmail } = req.body;
 
-        if(!member){
-          return res.status(400).send({message: "É necessário enviar pelo menos um membro."});
-        }
+    if (!member) {
+      return res
+        .status(400)
+        .send({ message: "É necessário enviar pelo menos um membro." });
+    }
 
-        await addMemberService(id, member, memberEmail, userId);
+    await addMemberService(id, member, memberEmail, userId);
 
-        return res.send({message: "Membro adicionado com sucesso!"});
-        
-      } catch (error) {
-        return res.status(500).send({message: error.message});
-      }
-}
+    return res.send({ message: "Membro adicionado com sucesso!" });
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+};
 
 export const deleteMember = async (req, res) => {
   try {
-  
     const { idCard, idMember } = req.params;
 
     await deleteMemberService(idCard, idMember);
 
-    return res.send({message: "Membro removido com sucesso!"});
-    
+    return res.send({ message: "Membro removido com sucesso!" });
   } catch (error) {
-    return res.status(500).send({message: error.message});
+    return res.status(500).send({ message: error.message });
   }
-}
+};
 
 export const addTask = async (req, res) => {
-    try {
+  try {
+    const { id } = req.params;
+    const userId = req.userId;
+    const { title } = req.body;
 
-      const { id } = req.params;
-      const userId = req.userId;
-      const { title } = req.body;   
-
-      if(!title){
-        return res.status(400).send({message: "É necessário inserir um titulo."});
-      }
-
-      await addTaskService(id, title, userId);
-
-      res.send({message: "Task Adiciona com sucesso!"});
-      
-    } catch (error) {
-      res.status(500).send({message: error.message});
+    if (!title) {
+      return res
+        .status(400)
+        .send({ message: "É necessário inserir um titulo." });
     }
+
+    await addTaskService(id, title, userId);
+
+    res.send({ message: "Task Adiciona com sucesso!" });
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+};
+
+export const findSubTask = async (req, res) => {
+  try {
+    const { id, idTask } = req.params;
+
+    const data = await findSubTaskService(id, idTask);
+
+    return res.send({ data });
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
 };
 
 export const addSubTask = async (req, res) => {
   try {
-
     const { id, idTask } = req.params;
     const userId = req.userId;
-    const { tarefa } = req.body;   
+    const { tarefa } = req.body;
 
-    if(!tarefa){
-      return res.status(400).send({message: "É necessário inserir um titulo."});
+    if (!tarefa) {
+      return res
+        .status(400)
+        .send({ message: "É necessário inserir um titulo." });
     }
 
     await addSubTaskService(id, idTask, tarefa, userId);
 
-    res.send({message: "Task Adiciona com sucesso!"});
-    
+    res.send({ message: "Task Adiciona com sucesso!" });
   } catch (error) {
-    res.status(500).send({message: error.message});
+    res.status(500).send({ message: error.message });
   }
-}
+};

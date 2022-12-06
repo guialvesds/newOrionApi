@@ -33,15 +33,12 @@ const CardSchema = mongoose.Schema({
   },
   comments: {
     type: Array,
+    ref: "User",
     require: false,
   },
   members: {
     type: Array,
-    require: false,
-      subTask: {
-         type: Array,
-         require: false,
-    },
+    require: false,   
   },
 });
 

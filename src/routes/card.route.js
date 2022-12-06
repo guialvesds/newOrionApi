@@ -13,7 +13,9 @@ import {
   addMember,
   deleteMember,
   addTask,
-  addSubTask
+  addSubTask,
+  findSubTask,
+  editComment
 } from "../controllers/card.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
@@ -27,6 +29,7 @@ route.delete("/:id", authMiddleware, deleteCard); // Deleta um Card
 //COMENTÁRIO
 route.patch("/comment/:id", authMiddleware, addComment); // Adiciona um comentário no card
 route.patch("/comment/:idCard/:idComment", authMiddleware, deleteComment); // Deleta um comentário do card
+route.patch("/editComment/:idCard/:idComment", authMiddleware, editComment)
 //MEMBRO
 route.patch("/member/:id", authMiddleware, addMember); // Adiciona um membro ao card
 route.patch("/member/:idCard/:idMember", authMiddleware, deleteMember); // Deleta um membro do Card
@@ -34,6 +37,7 @@ route.patch("/member/:idCard/:idMember", authMiddleware, deleteMember); // Delet
 route.patch("/task/:id", authMiddleware, addTask); // Adiciona uma nova task
 // route.patch("/task/:idCard/:idTask", authMiddleware, deleteTask); // Deleta uma task
 route.patch("/subTask/:idCard/:idTask", authMiddleware, addSubTask); // Adiciona uma subTask
+route.get("/subTask/:idCard/:idTask", authMiddleware, findSubTask); // Busca uma subTask
 // route.patch("/task/:idCard/:idTask/:idSubTask", authMiddleware, deleteSubTask); // Deleta uma subTask
 
 export default route;

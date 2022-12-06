@@ -6,7 +6,7 @@ const create = async (req, res) => {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      res.status(400).send({ message: "Todos os campos são obrigatórios!" });
+      return res.status(400).send({ message: "Todos os campos são obrigatórios!" });
     }
 
     const user = await userService.createUserService(req.body);
@@ -17,9 +17,9 @@ const create = async (req, res) => {
         .send({ message: "Não foi possivel criar o usuário" });
     }
 
-    res.status(200).send({ message: "Usário criado com sucesso!", user });
+    return res.status(200).send({ message: "Usário criado com sucesso!", user });
   } catch (error) {
-    res.status(500).send({ message: "Erro ao criar um novo usuário." });
+    return res.status(500).send({ message: "Erro ao criar um novo usuário." });
   }
 };
 
@@ -31,7 +31,7 @@ const findAll = async (req, res) => {
       return res.status(400).send({ message: "Não a usuários registrados" });
     }
 
-    res.status(200).send(users);
+    return res.status(200).send(users);
   } catch (error) {
     return res.status(500).send({ message: "Erro ao buscar usuários." });
   }

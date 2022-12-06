@@ -22,7 +22,6 @@ export const validUser = async (req, res, next) => {
 
   req.id = id;
   req.user = user;
- 
 
   return next();
 };
