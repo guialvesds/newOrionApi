@@ -23,7 +23,6 @@ export const create = async (req, res) => {
       created_at,
       delivery_date,
       description,
-      tasks,
       comments,
       members,
     } = req.body;
@@ -43,7 +42,6 @@ export const create = async (req, res) => {
       delivery_date,
       user: req.userId,
       description,
-      tasks,
       comments,
       members,
     });
@@ -70,8 +68,7 @@ export const findAll = async (req, res) => {
         tag: item.tag,
         created_at: item.created_at,
         delivery_date: item.delivery_date,
-        description: item.description,
-        tasks: item.tasks,
+        description: item.description,        
         comments: item.comments,
       })),
     });

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const CardSchema = mongoose.Schema({
+const CardSchema = new mongoose.Schema({
   code: {
     type: Number,
     require: false,
@@ -28,12 +28,12 @@ const CardSchema = mongoose.Schema({
     required: true,
   },
   tasks: {
-    type: Array,
-    require: false,
+    type:mongoose.Schema.Types.ObjectId,
+    ref: "Task",
+    require: true,
   },
   comments: {
     type: Array,
-    ref: "User",
     require: false,
   },
   members: {
