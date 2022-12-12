@@ -70,6 +70,8 @@ export const findAll = async (req, res) => {
         delivery_date: item.delivery_date,
         description: item.description,        
         comments: item.comments,
+        members: item.members,
+        tasks: item.tasks,
       })),
     });
   } catch (error) {
@@ -238,16 +240,16 @@ export const addMember = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.userId;
-    const { member } = req.body;
+    const { memberName } = req.body;
     const { memberEmail } = req.body;
 
-    if (!member) {
+    if (!memberName) {
       return res
         .status(400)
         .send({ message: "É necessário enviar pelo menos um membro." });
     }
 
-    await addMemberService(id, member, memberEmail, userId);
+    await addMemberService(id, memberName, memberEmail, userId);
 
     return res.send({ message: "Membro adicionado com sucesso!" });
   } catch (error) {

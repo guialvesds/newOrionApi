@@ -72,7 +72,7 @@ export const editCommentService = (idCard, idComment, userId,  comment,) => {
   );
 };
 
-export const addMemberService = (idCard, member, memberEmail, userId) => {
+export const addMemberService = (idCard, MemberName, memberEmail, userId) => {
   const idMember = Math.floor(Date.now() * Math.random()).toString(25);
 
   return Card.findOneAndUpdate(
@@ -82,7 +82,7 @@ export const addMemberService = (idCard, member, memberEmail, userId) => {
         members: {
           idMember,
           userId,
-          member,
+          MemberName,
           memberEmail,
           created_At: new Date(),
         },

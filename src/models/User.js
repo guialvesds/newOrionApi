@@ -20,6 +20,13 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: new Date()
     },
+    member: {
+        type: Boolean
+    },
+    selected: {
+        type: Boolean
+    }
+
 });
 
 //Antes de salvar faça algo

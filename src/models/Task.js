@@ -7,7 +7,7 @@ const TaskSchema = new mongoose.Schema({
   },
   idCard: {
     type: mongoose.Schema.Types.ObjectId,
-    // ref: "Card",
+    ref: "Card",
     require: false,
   },
   created_at:{

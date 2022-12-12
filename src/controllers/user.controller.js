@@ -3,7 +3,7 @@ import userService from "../services/user.service.js";
 
 const create = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, member, selected } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).send({ message: "Todos os campos são obrigatórios!" });
@@ -57,7 +57,7 @@ const findOne = async (req, res) => {
 
 const editOne = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password,  member, selected } = req.body;
 
     if (!name && !email && !password) {
       return res
@@ -67,7 +67,7 @@ const editOne = async (req, res) => {
 
     const { id, user } = req;
 
-    await userService.editOneUserService(id, name, email, password);
+    await userService.editOneUserService(id, name, email, password, member, selected );
 
     return res.send({ message: "Usuário alterado com sucesso." });
   } catch (error) {
