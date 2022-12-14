@@ -5,7 +5,7 @@ export const addTaskService = (body) => {
 };
 
 export const getTaskService = (body) => {
-  return Task.find();
+  return Task.find().populate("cardId");
 }
 
 export const getTaskByIdService = (idTask) => {

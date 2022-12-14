@@ -22,16 +22,16 @@ const CardSchema = new mongoose.Schema({
   delivery_date: {
     type: Date,
   },
-  user: {
+  user: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
-  },
-  tasks: [{
+  }],
+  tasks: {
     type:mongoose.Schema.Types.ObjectId,
     ref: "Task",
     require: true,
-  }],
+  },
   comments: {
     type: Array,
     require: false,
@@ -40,6 +40,10 @@ const CardSchema = new mongoose.Schema({
     type: Array,
     require: false,   
   },
+  files: {
+    type: Array,
+    require: false,
+    }
 });
 
 const Card = mongoose.model("Card", CardSchema);

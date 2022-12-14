@@ -66,6 +66,7 @@ export const findAll = async (req, res) => {
         code: item.code,
         title: item.title,
         tag: item.tag,
+        user: item.user,
         created_at: item.created_at,
         delivery_date: item.delivery_date,
         description: item.description,        
@@ -271,17 +272,26 @@ export const deleteMember = async (req, res) => {
 
 export const addTask = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { idCard } = req.params;
     const userId = req.userId;
-    const { title } = req.body;
+    const { titleTask } = req.body;
 
-    if (!title) {
+
+    if (!titleTask) {
       return res
         .status(400)
         .send({ message: "É necessário inserir um titulo." });
     }
 
-    await addTaskService(id, title, userId);
+    const data ={
+      cardId: idCard,
+      titleTask: titleTask,
+      user: userId
+    }
+
+    console.log("cardID", idCard);
+
+    await addTaskService({...data});
 
     res.send({ message: "Task Adiciona com sucesso!" });
   } catch (error) {
@@ -318,5 +328,17 @@ export const addSubTask = async (req, res) => {
     res.send({ message: "Task Adiciona com sucesso!" });
   } catch (error) {
     res.status(500).send({ message: error.message });
+  }
+};
+
+
+export const uploadFile = async (req, res) => {
+  try {
+    
+    console.log("nome aquibvo" , req.file.filename);
+    return res.send()
+
+  } catch (error) {
+    res.send(error.message)
   }
 };

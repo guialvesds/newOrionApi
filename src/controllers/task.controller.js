@@ -2,19 +2,28 @@ import { addTaskService, getTaskService, getTaskByIdService } from "../services/
 
 export const addTask = async (req, res) => {
   try {
+    const { idCard } = req.params;
+    const userId = req.userId;
     const { titleTask } = req.body;
 
+
     if (!titleTask) {
-      return res.status(400).send({ message: "Título é obrigatório!" });
+      return res
+        .status(400)
+        .send({ message: "É necessário inserir um titulo." });
     }
 
-    await addTaskService({
-      titleTask,
-      idCard: req.params.id,
-      user: req.userId,
-    });
+    const data ={
+      cardId: "6397b9590171adc9fb9b8f1f",
+      titleTask: titleTask,
+      user: userId
+    }
 
-    return res.send({ message: "Task Criada com sucesso!" });
+    console.log("cardID", idCard);
+
+    await addTaskService({...data});
+
+    res.send({ message: "Task Adiciona com sucesso!" });
   } catch (error) {
     return res.send(error.message);
   }
