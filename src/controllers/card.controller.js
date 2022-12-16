@@ -13,6 +13,7 @@ import {
   addSubTaskService,
   findSubTaskService,
   editCommentService,
+  uploadFilesServices
 } from "../services/card.service.js";
 
 export const create = async (req, res) => {
@@ -44,6 +45,7 @@ export const create = async (req, res) => {
       description,
       comments,
       members,
+      files,
     });
 
     return res.send(201);
@@ -73,6 +75,7 @@ export const findAll = async (req, res) => {
         comments: item.comments,
         members: item.members,
         tasks: item.tasks,
+        files: item.files,
       })),
     });
   } catch (error) {
@@ -333,12 +336,22 @@ export const addSubTask = async (req, res) => {
 
 
 export const uploadFile = async (req, res) => {
-  try {
-    
-    console.log("nome aquibvo" , req.file.filename);
-    return res.send()
+    try {
+      const { idCard } = req.params;
+      const userId = req.userId;
+      const  file  = req.file;
 
-  } catch (error) {
-    res.send(error.message)
-  }
+      if (!file) {
+        return res
+          .status(400)
+          .send({ message: "É necessário enviar pelo menos um arquivo." });
+      }
+  
+      await uploadFilesServices(idCard, userId, file, );
+     
+  
+      return res.send({ message: "Arquivo adicionado com sucesso!" });
+    } catch (error) {
+      return res.status(500).send({ message: error.message });
+    }
 };

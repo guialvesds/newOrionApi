@@ -144,3 +144,20 @@ export const addSubTaskService = (idCard, idTask, userId, tarefa) => {
   );
 };
 
+export const uploadFilesServices = (idCard, userId, file) => {
+
+  const idFile = Math.floor(Date.now() * Math.random()).toString(25); 
+
+return Card.findOneAndUpdate({_id: idCard},
+  {
+    $push: {
+      files:{
+        idFile: idFile,
+        file: file,
+        userId: userId,
+        created_at: new Date(),
+      }
+    }
+  })
+}
+

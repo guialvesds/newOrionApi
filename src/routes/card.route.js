@@ -20,21 +20,9 @@ import {
 } from "../controllers/card.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import multer from "multer";
-import {storage,} from "../multer/multer.config.js";
+import {storage} from "../multer/multer.config.js";
 
-const upload = multer({storage: storage})
-
-// const upload = multer({
-//   dest: "uploads",
-//   limits: {
-//     fileSize: 1000000
-//   },
-//   fileFilter(req, file, callback){
-//     console.log(file.originalname)
-//     callback(new error("Arquivo incorreto."));
-//     callback(undefined, true);
-//   }
-// });
+// const upload = multer({storage: storage})
 
 // All CARD
 route.post("/", authMiddleware, create); // Cria um novo Card
@@ -58,6 +46,6 @@ route.get("/subTask/:idCard/:idTask", authMiddleware, findSubTask); // Busca uma
 // route.patch("/task/:idCard/:idTask/:idSubTask", authMiddleware, deleteSubTask); // Deleta uma subTask
 
 //UPLOAD FILE
-route.post("/upload/", upload.single("uploads"), uploadFile);
+route.post("/upload/:idCard", storage.single("uploads"), uploadFile);
 
 export default route;
