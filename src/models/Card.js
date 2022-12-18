@@ -42,6 +42,7 @@ const CardSchema = new mongoose.Schema({
   },
   files: {
     type: Array,
+    require: false,
     }
 });
 

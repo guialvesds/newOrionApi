@@ -13,7 +13,7 @@ import {
   addSubTaskService,
   findSubTaskService,
   editCommentService,
-  uploadFilesServices
+  uploadFilesServices,
 } from "../services/card.service.js";
 
 export const create = async (req, res) => {
@@ -26,6 +26,7 @@ export const create = async (req, res) => {
       description,
       comments,
       members,
+      files,
     } = req.body;
 
     if (!title) {
@@ -71,7 +72,7 @@ export const findAll = async (req, res) => {
         user: item.user,
         created_at: item.created_at,
         delivery_date: item.delivery_date,
-        description: item.description,        
+        description: item.description,
         comments: item.comments,
         members: item.members,
         tasks: item.tasks,
@@ -157,11 +158,9 @@ export const addComment = async (req, res) => {
     console.log(userName);
 
     if (!comment) {
-      return res
-        .status(400)
-        .send({
-          message: "Para comentar é necessário enviar um comentário...",
-        });
+      return res.status(400).send({
+        message: "Para comentar é necessário enviar um comentário...",
+      });
     }
 
     await addCommentService(id, comment, userId, userName);
@@ -211,7 +210,7 @@ export const editComment = async (req, res) => {
   try {
     const { idCard, idComment } = req.params;
     const userId = req.userId;
-    const {comment} = req.body;
+    const { comment } = req.body;
 
     const commenteEdit = await editCommentService(
       idCard,
@@ -279,22 +278,21 @@ export const addTask = async (req, res) => {
     const userId = req.userId;
     const { titleTask } = req.body;
 
-
     if (!titleTask) {
       return res
         .status(400)
         .send({ message: "É necessário inserir um titulo." });
     }
 
-    const data ={
+    const data = {
       cardId: idCard,
       titleTask: titleTask,
-      user: userId
-    }
+      user: userId,
+    };
 
     console.log("cardID", idCard);
 
-    await addTaskService({...data});
+    await addTaskService({ ...data });
 
     res.send({ message: "Task Adiciona com sucesso!" });
   } catch (error) {
@@ -334,24 +332,34 @@ export const addSubTask = async (req, res) => {
   }
 };
 
-
 export const uploadFile = async (req, res) => {
-    try {
-      const { idCard } = req.params;
-      const userId = req.userId;
-      const  file  = req.file;
+  try {
+    const { idCard } = req.params;
+    const userId = req.userId;
 
-      if (!file) {
-        return res
-          .status(400)
-          .send({ message: "É necessário enviar pelo menos um arquivo." });
-      }
-  
-      await uploadFilesServices(idCard, userId, file, );
-     
-  
-      return res.send({ message: "Arquivo adicionado com sucesso!" });
-    } catch (error) {
-      return res.status(500).send({ message: error.message });
+    const location = req.file.location;
+    const type = location.slice(location.length -4)
+
+    const detail = {
+      originalname: req.file.originalname,
+      location: req.file.location,
+      type: type,
+    };
+
+    if (!detail) {
+      return res
+        .status(400)
+        .send({ message: "É necessário enviar pelo menos um arquivo." });
     }
+
+    await uploadFilesServices(idCard, userId, detail);
+
+    console.log(detail);
+    console.log(type);
+    console.log(userId);
+
+    return res.send({ message: "Arquivo adicionado com sucesso!" });
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
 };
