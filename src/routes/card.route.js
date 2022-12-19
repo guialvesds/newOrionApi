@@ -16,7 +16,10 @@ import {
   addSubTask,
   findSubTask,
   editComment,
-  uploadFile
+  uploadFile,
+  deleteFile,
+  deleteFileAws,
+  updateFileName
 } from "../controllers/card.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import {storage} from "../multer/multer.config.js";
@@ -44,7 +47,10 @@ route.patch("/subTask/:idCard/:idTask", authMiddleware, addSubTask); // Adiciona
 route.get("/subTask/:idCard/:idTask", authMiddleware, findSubTask); // Busca uma subTask
 // route.patch("/task/:idCard/:idTask/:idSubTask", authMiddleware, deleteSubTask); // Deleta uma subTask
 
-//UPLOAD FILE
+//FILE
 route.post("/upload/:idCard", storage.single("uploads"), authMiddleware, uploadFile);
+route.patch("/fileDelete/:idCard/:idFile", deleteFile);
+route.patch("/updateFileName/:idCard/:idFile", updateFileName);
+route.delete("/awsDelete/:filename", deleteFileAws);
 
 export default route;

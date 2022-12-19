@@ -1,6 +1,5 @@
 import Card from "../models/Card.js";
 
-
 export const createService = (body) => {
   return Card.create(body);
 };
@@ -10,11 +9,11 @@ export const findAllService = () => {
 };
 
 export const finCardIdService = (_id) => {
-  return Card.findById(_id)
+  return Card.findById(_id);
 };
 
 export const byUserService = (_id) => {
-  return Card.find({ user: _id }).sort({ _id: -1 })
+  return Card.find({ user: _id }).sort({ _id: -1 });
 };
 
 export const updateCardService = (
@@ -25,11 +24,12 @@ export const updateCardService = (
   description,
   tasks,
   comments,
-  members
+  members,
+  files,
 ) => {
   return Card.findOneAndUpdate(
     { _id: id },
-    { title, tag, delivery_date, description, tasks, comments, members },
+    { title, tag, delivery_date, description, tasks, comments, members, files },
     {
       rawResult: true,
     }
@@ -66,10 +66,10 @@ export const deleteCommentService = (idCard, idComment, userId) => {
   );
 };
 
-export const editCommentService = (idCard, idComment, userId,  comment,) => {
+export const editCommentService = (idCard, idComment, userId, comment) => {
   return Card.findOneAndUpdate(
     { _id: idCard },
-    { $set: {comments: { idComment, userId, comment, }}}
+    { $set: { comments: { idComment, userId, comment } } }
   );
 };
 
@@ -118,46 +118,55 @@ export const addTaskService = (idCard, title, userId) => {
 };
 
 export const findSubTaskService = (idCard, idTask) => {
-  return Card.findOne(
-    {_id: idCard, idTask: idTask}
-    
-  );
-}
+  return Card.findOne({ _id: idCard, idTask: idTask });
+};
 
 export const addSubTaskService = (idCard, idTask, userId, tarefa) => {
   const idSubTask = Math.floor(Date.now() * Math.random()).toString(25);
 
   return Card.findOneAndUpdate(
-    { _id: idCard, idTask: idTask },    
+    { _id: idCard, idTask: idTask },
     {
-      $push: {  
-        tasks: {      
+      $push: {
+        tasks: {
           subTask: {
             idSubTask,
             tarefa,
             userId,
-            created_At: new Date(),          
+            created_At: new Date(),
+          },
         },
       },
-    },
     }
   );
 };
 
 export const uploadFilesServices = (idCard, userId, detail) => {
+  const idFile = Math.floor(Date.now() * Math.random()).toString(25);
 
-  const idFile = Math.floor(Date.now() * Math.random()).toString(25); 
-
-return Card.findOneAndUpdate({_id: idCard},
-  {
-    $push: {
-      files:{
-        idFile: idFile,
-        detail: detail,
-        userId: userId,
-        created_at: new Date(),
-      }
+  return Card.findOneAndUpdate(
+    { _id: idCard },
+    {
+      $push: {
+        files: {
+          idFile: idFile,
+          detail: detail,
+          userId: userId,
+          created_at: new Date(),
+        },
+      },
     }
-  })
-}
+  );
+};
 
+export const deleteFileService = (idCard, idFile) => {
+  return Card.findOneAndUpdate(
+    { _id: idCard },
+    { $pull: { files: { idFile } } }
+  );
+};
+
+export const updateFileNameService = (idCard, idFile, originalname) => {
+  return Card.findOneAndUpdate({_id: idCard},
+    { $set: {files: {idFile, detail: {originalname: originalname}}}});
+}

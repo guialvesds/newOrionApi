@@ -14,7 +14,11 @@ import {
   findSubTaskService,
   editCommentService,
   uploadFilesServices,
+  deleteFileService,
+  updateFileNameService,
 } from "../services/card.service.js";
+
+import aws from "aws-sdk";
 
 export const create = async (req, res) => {
   try {
@@ -294,9 +298,9 @@ export const addTask = async (req, res) => {
 
     await addTaskService({ ...data });
 
-    res.send({ message: "Task Adiciona com sucesso!" });
+    return res.send({ message: "Task Adiciona com sucesso!" });
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    return res.status(500).send({ message: error.message });
   }
 };
 
@@ -338,12 +342,13 @@ export const uploadFile = async (req, res) => {
     const userId = req.userId;
 
     const location = req.file.location;
-    const type = location.slice(location.length -4)
+    const type = location.slice(location.length - 4);
 
     const detail = {
       originalname: req.file.originalname,
       location: req.file.location,
       type: type,
+      key: req.file.key,
     };
 
     if (!detail) {
@@ -356,10 +361,55 @@ export const uploadFile = async (req, res) => {
 
     console.log(detail);
     console.log(type);
-    console.log(userId);
+    console.log(req.file.key);
 
     return res.send({ message: "Arquivo adicionado com sucesso!" });
+  } catch (error) {
+    return res.status(500).send({ "error ao enviar arquivo": error.message });
+  }
+};
+
+export const deleteFile = async (req, res) => {
+  try {
+    const { idCard, idFile } = req.params;
+
+    await deleteFileService(idCard, idFile);
+
+    return res.send({ message: "Arquivo removido do banco de dados com sucesso!" });
   } catch (error) {
     return res.status(500).send({ message: error.message });
   }
 };
+export const deleteFileAws = async (req, res) => {
+  try {
+    const s3 = new aws.S3();
+    const filename = req.params.filename;
+
+    await s3
+      .deleteObject({
+        Bucket: "orionapp-files",
+        Key: filename,
+      })
+      .promise();  
+
+    return res.send({ message: "removido da aws com sucesso!" });
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+};
+
+export const updateFileName = async (req, res) => {
+  try {
+
+    const {idCard, idFile} = req.params;
+
+    const originalname = req.body;
+
+    await updateFileNameService(idCard, idFile, originalname);
+
+    return res.send({message: "Campo alterado com sucesso!"});
+    
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
+}
