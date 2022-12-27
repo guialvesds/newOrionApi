@@ -29,7 +29,7 @@ const CardSchema = new mongoose.Schema({
   }],
   tasks: {
     type:mongoose.Schema.Types.ObjectId,
-    ref: "Task",
+    ref: "List",
     require: true,
   },
   comments: {

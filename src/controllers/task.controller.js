@@ -1,53 +1,77 @@
-import { addTaskService, getTaskService, getTaskByIdService } from "../services/task.service.js";
+import {
+    addTaskService,
+    getTaskByIdService,
+    getTaskService,
+    editTaskService,
+    deleteTaskService,
+  } from "../services/Task.service.js";
+  
+  import Task from "../models/Task.js";
+  
+  export const addTask = async (req, res) => {
+    try {
+      const { titleTask } = req.body;      
+  
+      const data = new Task({
+        titleTask,         
+        listId: req.params.listId,
+      });
 
-export const addTask = async (req, res) => {
-  try {
-    const { idCard } = req.params;
-    const userId = req.userId;
-    const { titleTask } = req.body;
-
-
-    if (!titleTask) {
-      return res
-        .status(400)
-        .send({ message: "É necessário inserir um titulo." });
+      console.log(data);
+  
+      await addTaskService(data);
+  
+      return res.send(data);
+  
+      // res.send({ message: "Task Adiciona com sucesso!" });
+    } catch (error) {
+      return res.send(error.message);
     }
+  };
+  
+  export const getTask = async (req, res) => {
+    try {
 
-    const data ={
-      cardId: "6397b9590171adc9fb9b8f1f",
-      titleTask: titleTask,
-      user: userId
+        const listId = req.params.listId;
+
+      const data = await getTaskService(listId);
+  
+      return res.send({ data });
+    } catch (error) {
+      return res.send(error.message);
     }
-
-    console.log("cardID", idCard);
-
-    await addTaskService({...data});
-
-    res.send({ message: "Task Adiciona com sucesso!" });
-  } catch (error) {
-    return res.send(error.message);
-  }
-};
-
-export const getTask = async (req, res) => {
-  try {
-   const data = await getTaskService();
-
-    return res.send({ data });
-  } catch (error) {
-    return res.send(error.message);
-  }
-};
-
-export const getTaskById = async (req, res) => {
-  try {
-    const idTask = req.params;
-
-    const data = await getTaskByIdService(idTask);
-
-  return res.send({data})
-
-  } catch (error) {
-    return res.send(error.message);
-  }
-}
+  };
+  
+  export const getTaskById = async (req, res) => {
+    try {
+      const idTask = req.params;
+  
+      const data = await getTaskByIdService(idTask);
+  
+      return res.send({ data });
+    } catch (error) {
+      return res.send(error.message);
+    }
+  };
+  
+  export const editTask = async (req, res) => {
+    try {
+      const id = req.params;
+      const title = req.body.title;
+  
+      await editTaskService(id, title);
+  
+      return res.send({ message: "Task alterada com sucesso!" });
+    } catch (error) {
+      return res.send(error.message);
+    }
+  };
+  
+  export const deleteTask = async (req, res) => {
+    const id = req.params;
+  
+    await deleteTaskService(id);
+  
+    return res.send({ message: "Task excluída com sucesso!" });
+  };
+  

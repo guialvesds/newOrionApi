@@ -5,23 +5,13 @@ const TaskSchema = new mongoose.Schema({
         type: String,
         Require: true
     },
-    cardId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Card",
-        require: true
-    },
     created_at: {
         type: Date,
         default: new Date()
     },
-    user: {
+    listId: {
         type: mongoose.Schema.Types.ObjectId,
-        require: true,
-        ref: "User"
-    },
-    subTask: {
-        type: Array,
-        require: false
+        require: true,       
     }
 });
 

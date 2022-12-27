@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import bodyParser from "body-parser";
 
 import connectDb from "./src/database/db.js";
 
@@ -8,7 +9,7 @@ import connectDb from "./src/database/db.js";
 import userRoute from "./src/routes/user.route.js";
 import authRoute from "./src/routes/auth.route.js";
 import cardRoute from "./src/routes/card.route.js";
-import taskRoute from "./src/routes/task.route.js"
+import listRoute from "./src/routes/list.route.js"
 
 dotenv.config();
 
@@ -22,11 +23,12 @@ const app = express();
 connectDb();
 app.use(cors(corsOptions));
 app.use(express.json());
+// app.use(bodyParser);
 
 app.use("/user", userRoute);
 app.use("/auth", authRoute);
 app.use("/card", cardRoute);
-app.use("/task", taskRoute);
+app.use("/list", listRoute);
 
 const PORT = process.env.PORT || 3000;
 

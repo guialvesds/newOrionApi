@@ -1,3 +1,4 @@
+import List from "../models/List.js";
 import {
   createService,
   findAllService,
@@ -9,9 +10,6 @@ import {
   deleteCommentService,
   addMemberService,
   deleteMemberService,
-  addTaskService,
-  addSubTaskService,
-  findSubTaskService,
   editCommentService,
   uploadFilesServices,
   deleteFileService,
@@ -31,6 +29,7 @@ export const create = async (req, res) => {
       comments,
       members,
       files,
+      list
     } = req.body;
 
     if (!title) {
@@ -51,6 +50,7 @@ export const create = async (req, res) => {
       comments,
       members,
       files,
+      list
     });
 
     return res.send(201);
@@ -79,7 +79,7 @@ export const findAll = async (req, res) => {
         description: item.description,
         comments: item.comments,
         members: item.members,
-        tasks: item.tasks,
+        tasks: item.list,
         files: item.files,
       })),
     });
@@ -118,7 +118,7 @@ export const byUser = async (req, res) => {
 
 export const updateCard = async (req, res) => {
   try {
-    const { title, tag, delivery_date, description, tasks, comments, members } =
+    const { title, tag, delivery_date, description, tasks, comments, members,files } =
       req.body;
 
     const { id } = req.params;
@@ -131,7 +131,8 @@ export const updateCard = async (req, res) => {
       description,
       tasks,
       comments,
-      members
+      members,
+      files
     );
 
     return res.send({ message: "Card alterado com sucesso!" });
@@ -276,66 +277,6 @@ export const deleteMember = async (req, res) => {
   }
 };
 
-export const addTask = async (req, res) => {
-  try {
-    const { idCard } = req.params;
-    const userId = req.userId;
-    const { titleTask } = req.body;
-
-    if (!titleTask) {
-      return res
-        .status(400)
-        .send({ message: "É necessário inserir um titulo." });
-    }
-
-    const data = {
-      cardId: idCard,
-      titleTask: titleTask,
-      user: userId,
-    };
-
-    console.log("cardID", idCard);
-
-    await addTaskService({ ...data });
-
-    return res.send({ message: "Task Adiciona com sucesso!" });
-  } catch (error) {
-    return res.status(500).send({ message: error.message });
-  }
-};
-
-export const findSubTask = async (req, res) => {
-  try {
-    const { id, idTask } = req.params;
-
-    const data = await findSubTaskService(id, idTask);
-
-    return res.send({ data });
-  } catch (error) {
-    res.status(500).send({ message: error.message });
-  }
-};
-
-export const addSubTask = async (req, res) => {
-  try {
-    const { id, idTask } = req.params;
-    const userId = req.userId;
-    const { tarefa } = req.body;
-
-    if (!tarefa) {
-      return res
-        .status(400)
-        .send({ message: "É necessário inserir um titulo." });
-    }
-
-    await addSubTaskService(id, idTask, tarefa, userId);
-
-    res.send({ message: "Task Adiciona com sucesso!" });
-  } catch (error) {
-    res.status(500).send({ message: error.message });
-  }
-};
-
 export const uploadFile = async (req, res) => {
   try {
     const { idCard } = req.params;
@@ -402,10 +343,17 @@ export const updateFileName = async (req, res) => {
   try {
 
     const {idCard, idFile} = req.params;
+   
+    const  {userId, created_at } = req.body;
 
-    const originalname = req.body;
+    const detail = {
+      originalname: req.body.originalname, 
+      location: req.body.location, 
+      type: req.body.type, 
+      key: req.body.key,
+    }
 
-    await updateFileNameService(idCard, idFile, originalname);
+    await updateFileNameService(idCard, idFile, userId, created_at, detail);
 
     return res.send({message: "Campo alterado com sucesso!"});
     
