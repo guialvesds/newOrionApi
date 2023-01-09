@@ -7,19 +7,18 @@ import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const route = express.Router();
 
+//LIST
 route.get("/", getList);
 route.get("/:_id",  getListById);
 route.post("/",  authMiddleware, addList);
 route.patch("/:_id",  editList);
 route.delete("/:_id", deleteList);
 
-
 //TASKS
-
 route.post("/:listId/task",  authMiddleware, addTask);
 route.get("/:listId/task", getTask);
 route.get("/:listId/:_id",  getTaskById);
-route.patch("/:listId/:_id",  editTask);
+route.patch("/:listId/task/:taskId",  editTask);
 route.delete("/:listId/:_id", deleteTask);
 
 export default route;

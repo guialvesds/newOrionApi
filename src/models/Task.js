@@ -12,6 +12,14 @@ const TaskSchema = new mongoose.Schema({
     listId: {
         type: mongoose.Schema.Types.ObjectId,
         require: true,       
+    },
+    member: {
+        type: String,
+        require: false,
+    },
+    delivery_date: {
+        type: Date,
+        require: false
     }
 });
 

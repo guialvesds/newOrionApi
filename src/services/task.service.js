@@ -12,10 +12,10 @@ export const getTaskByIdService = (idTask) => {
 return Task.findById(idTask);
 }
 
-export const editTaskService = (id, title) => {
+export const editTaskService = (taskId, listId, titleTask) => {
   return Task.findOneAndUpdate(
-    { _id: id },
-    { title } 
+    {_id: taskId, listId: listId },
+    { $set: titleTask } 
   );
 }
 

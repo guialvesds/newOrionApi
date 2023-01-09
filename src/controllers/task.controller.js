@@ -56,12 +56,17 @@ import {
   
   export const editTask = async (req, res) => {
     try {
-      const id = req.params;
-      const title = req.body.title;
+      const listId = req.params.listId;
+      const idTask = req.params.taskId;
+     
+      await Task.findOneAndUpdate({
+        _id: idTask, 
+        listId: listId
+      }, {
+        $set: req.body
+      });
   
-      await editTaskService(id, title);
-  
-      return res.send({ message: "Task alterada com sucesso!" });
+      return res.send({ message: "Task alterada com sucesso!"});
     } catch (error) {
       return res.send(error.message);
     }
