@@ -4,7 +4,7 @@ import {
     getTaskService,
     editTaskService,
     deleteTaskService,
-  } from "../services/Task.service.js";
+  } from "../services/task.service.js";
   
   import Task from "../models/Task.js";
   
