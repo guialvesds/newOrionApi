@@ -14,8 +14,9 @@ import {
   
       const data = new Task({
         titleTask,         
-        listId: req.params.listId,
+        _listId: req.params.listId,
       });
+    
 
       console.log(data);
   
@@ -56,12 +57,12 @@ import {
   
   export const editTask = async (req, res) => {
     try {
-      const listId = req.params.listId;
       const idTask = req.params.taskId;
+      const listId = req.params.listId;
      
       await Task.findOneAndUpdate({
         _id: idTask, 
-        listId: listId
+        _listId: listId
       }, {
         $set: req.body
       });
@@ -73,9 +74,10 @@ import {
   };
   
   export const deleteTask = async (req, res) => {
-    const id = req.params;
+    const  _id = req.params.taskId;
+      const  _listId = req.params.listId;
   
-    await deleteTaskService(id);
+    await deleteTaskService(_id,  _listId);
   
     return res.send({ message: "Task excluída com sucesso!" });
   };

@@ -4,6 +4,7 @@ import {
   getListService,
   editListService,
   deleteListService,
+  getListCardService,
 } from "../services/list.service.js";
 
 import List from "../models/List.js";
@@ -38,6 +39,19 @@ export const getList = async (req, res) => {
     return res.send(error.message);
   }
 };
+
+export const getListCard = async (req, res) => {
+  try {
+    const idCard = req.params.idCard;
+
+    const data = await getListCardService(idCard);
+
+    return res.send({data});
+
+  } catch (error) {
+    return res.send(error.message);
+  }
+}
 
 export const getListById = async (req, res) => {
   try {

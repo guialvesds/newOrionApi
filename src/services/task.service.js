@@ -5,20 +5,22 @@ export const addTaskService = (body) => {
 };
 
 export const getTaskService = (listId) => {
-  return Task.find({listId: listId});
+  return Task.find({_listId: listId});
 }
 
 export const getTaskByIdService = (idTask) => {
 return Task.findById(idTask);
 }
 
-export const editTaskService = (taskId, listId, titleTask) => {
+export const editTaskService = (taskId, listId, body) => {
   return Task.findOneAndUpdate(
     {_id: taskId, listId: listId },
-    { $set: titleTask } 
+    { $set: body } 
   );
 }
 
-export const deleteTaskService = (id) => {
-  return Task.deleteOne(id);
+export const deleteTaskService = (taskId, listId,) => {
+  return Task.findOneAndRemove({
+    _id: taskId, listId: listId 
+  });
 }

@@ -3,23 +3,29 @@ import mongoose from "mongoose";
 const TaskSchema = new mongoose.Schema({
     titleTask: {
         type: String,
-        Require: true
+        Require: true,
+        minlength: 1,
+        trim: true
     },
     created_at: {
         type: Date,
         default: new Date()
     },
-    listId: {
-        type: mongoose.Schema.Types.ObjectId,
+    _listId: {
+        type: mongoose.Types.ObjectId,
         require: true,       
     },
     member: {
-        type: String,
+        type: Array,
         require: false,
     },
     delivery_date: {
         type: Date,
         require: false
+    },
+    completed: {
+        type: Boolean,
+        default: false
     }
 });
 

@@ -8,6 +8,10 @@ export const getListService = () => {
   return List.find();
 }
 
+export const getListCardService = (idCard) => {
+  return List.find({idCard: idCard})
+}
+
 export const getListByIdService = (idTask) => {
 return List.findById(idTask);
 }

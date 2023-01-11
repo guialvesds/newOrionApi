@@ -28,7 +28,7 @@ app.use(express.json());
 app.use("/user", userRoute);
 app.use("/auth", authRoute);
 app.use("/card", cardRoute);
-app.use("/list", listRoute);
+app.use("/lists", listRoute);
 
 const PORT = process.env.PORT || 3000;
 
