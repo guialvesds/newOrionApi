@@ -11,7 +11,7 @@ const route = express.Router();
 route.get("/", getList);
 route.get("/:idCard/lists", getListCard);
 route.get("/:_id",  getListById);
-route.post("/",  authMiddleware, addList);
+route.post("/:idCard",  authMiddleware, addList);
 route.patch("/:_id",  editList);
 route.delete("/:_id", deleteList);
 
