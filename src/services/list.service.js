@@ -26,3 +26,4 @@ export const editListService = (id, title) => {
 export const deleteListService = (id) => {
   return List.deleteOne(id);
 }
+

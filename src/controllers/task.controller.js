@@ -7,6 +7,7 @@ import {
 } from "../services/task.service.js";
 
 import Task from "../models/Task.js";
+import List from "../models/List.js";
 
 export const addTask = async (req, res) => {
   try {
@@ -56,24 +57,39 @@ export const getTaskById = async (req, res) => {
 };
 
 export const editTask = async (req, res) => {
-  try {
-    const idTask = req.params.taskId;
-    const listId = req.params.listId;
+  // We want to update an existing task (specified by taskId)
 
-    await Task.findOneAndUpdate(
-      {
-        _id: idTask,
-        _listId: listId,
-      },
-      {
-        $set: req.body,
+  List.findOne({
+    _id: req.params.listId,
+  })
+    .then((list) => {
+      if (list) {
+        // list object with the specified conditions was found
+        // therefore the currently authenticated user can make updates to tasks within this list
+        return true;
       }
-    );
 
-    return res.send({ message: "Task alterada com sucesso!" });
-  } catch (error) {
-    return res.send(error.message);
-  }
+      // else - the list object is undefined
+      return false;
+    })
+    .then((canUpdateTasks) => {
+      if (canUpdateTasks) {
+        // the currently authenticated user can update tasks
+        Task.findOneAndUpdate(
+          {
+            _id: req.params.taskId,
+            _listId: req.params.listId,
+          },
+          {
+            $set: req.body,
+          }
+        ).then(() => {
+          res.send({ message: "Updated successfully." });
+        });
+      } else {
+        res.sendStatus(404);
+      }
+    });
 };
 
 export const deleteTask = async (req, res) => {
@@ -83,4 +99,16 @@ export const deleteTask = async (req, res) => {
   await deleteTaskService(_id, _listId);
 
   return res.send({ message: "Task excluída com sucesso!" });
+};
+
+export const deleteTaskList = async (req, res) => {
+  try {
+    const listId = '63cb29365e8dbc03981ddf29';
+
+    Task.remove({_listId: '63cb29365e8dbc03981ddf29'});
+
+    return res.send({ message: "Tarefas removidas com sucesso!" });
+  } catch (error) {
+    return res.send(error)
+  }
 };
