@@ -1,1 +1,1 @@
-map:npm start
+web:npm start
