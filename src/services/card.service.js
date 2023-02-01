@@ -5,15 +5,15 @@ export const createService = (body) => {
 };
 
 export const findAllService = () => {
-  return Card.find().sort({ _id: -1 }).populate(["user", "tasks"]);
+  return Card.find().sort({ _id: -1 }).populate("user");
 };
 
 export const finCardIdService = (_id) => {
-  return Card.findById(_id);
+  return Card.findById(_id).populate("user");;
 };
 
 export const byUserService = (_id) => {
-  return Card.find({ user: _id }).sort({ _id: -1 });
+  return Card.find({ user: _id }).sort({ _id: -1 }).populate("user");
 };
 
 export const updateCardService = (
