@@ -12,8 +12,8 @@ import User from "../models/User.js";
   return User.findById(id);
 };
 
- const editOneUserService = (id, name, sname, email, password, member, selected ) => {
-  return User.findByIdAndUpdate({ _id: id }, { name, sname, email, password, member, selected  });
+ const editOneUserService = (id, name, email, password, member, selected ) => {
+  return User.findByIdAndUpdate({ _id: id }, { name, email, password, member, selected  });
 };
 
 const deleteUserService = (id) => {

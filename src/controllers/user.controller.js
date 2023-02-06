@@ -3,9 +3,9 @@ import userService from "../services/user.service.js";
 
 const create = async (req, res) => {
   try {
-    const { name, sname, email, password, member, selected } = req.body;
+    const { name, email, password, member, selected } = req.body;
 
-    if (!name || !sname || !email || !password) {
+    if (!name || !email || !password) {
       return res.status(400).send({ message: "Todos os campos são obrigatórios!" });
     }
 
