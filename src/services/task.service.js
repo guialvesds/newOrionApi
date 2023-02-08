@@ -26,12 +26,6 @@ export const editTaskService = (
     }
   );
 };
-// export const editTaskService = (taskId, listId, body) => {
-//   return Task.findOneAndUpdate(
-//     {_id: taskId, listId: listId },
-//     { $set: body }
-//   );
-// }
 
 export const deleteTaskService = (taskId, listId) => {
   return Task.findOneAndRemove({
