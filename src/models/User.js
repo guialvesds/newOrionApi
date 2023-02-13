@@ -29,6 +29,10 @@ const UserSchema = new mongoose.Schema({
     },
     selected: {
         type: Boolean
+    },
+    avatar: {
+        type: Array,
+        require: false
     }
 
 });

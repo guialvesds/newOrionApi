@@ -6,9 +6,7 @@ dotenv.config();
 
 export const authMiddleware = (req, res, next) => {
   try {
-    const { authorization } = req.headers;
-
-    console.log(authorization);
+    const { authorization } = req.headers;   
 
     if (!authorization) {
       return res.status(401).json({message: "Token inválido. au"});
@@ -40,6 +38,7 @@ export const authMiddleware = (req, res, next) => {
 
       req.userId = user.id; 
       req.userName = user; 
+      req.avatar = user.avatar;     
            
       return next();
     });

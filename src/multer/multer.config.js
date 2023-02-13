@@ -20,7 +20,6 @@ export const storage = multer({
       const timeM = new Date().getMinutes();
       const timeS = new Date().getSeconds();
       cb(null, `${timeH}${timeM}${timeS}_${file.originalname}`);
-
     },
   }),
 });

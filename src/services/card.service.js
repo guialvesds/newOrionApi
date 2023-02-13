@@ -40,7 +40,7 @@ export const deleteCardService = (id) => {
   return Card.findOneAndDelete({ _id: id });
 };
 
-export const addCommentService = (idCard, comment, userId, userName) => {
+export const addCommentService = (idCard, comment, userId, userName, avatar) => {
   const idComment = Math.floor(Date.now() * Math.random()).toString(25);
 
   return Card.findOneAndUpdate(
@@ -53,6 +53,7 @@ export const addCommentService = (idCard, comment, userId, userName) => {
           userName,
           comment,
           created_At: new Date(),
+          avatar
         },
       },
     }

@@ -159,6 +159,7 @@ export const addComment = async (req, res) => {
     const userId = req.userId;
     const { comment } = req.body;
     const userName = req.userName.name;
+    const avatar = req.avatar
 
     console.log(userName);
 
@@ -168,7 +169,7 @@ export const addComment = async (req, res) => {
       });
     }
 
-    await addCommentService(id, comment, userId, userName);
+    await addCommentService(id, comment, userId, userName, avatar);
 
     return res.send({ message: "Comentário adicionado com sucesso!" });
   } catch (error) {
