@@ -6,7 +6,7 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await loginService(email);
-
+    t
     
     if(!user) {
       return res.status(404).send({ message: "Email ou senha inválido." });
